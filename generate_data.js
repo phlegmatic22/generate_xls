@@ -60,7 +60,8 @@ function createOutputWorkbook(configs) {
         },
         {
             key: 'ts',
-            width: 32
+            width: 32,
+            style: { numFmt: '##' }
         },
         {
             key: 'value',
@@ -125,7 +126,7 @@ function getTimeStamps(timeSpan, period, timeFormatConfig) {
     var totalTimeStamps = [];
     var timeFormat;
     if(timeFormatConfig === "US"){
-        timeFormat = "dd/mm/yyyy HH:MM:ss";
+        timeFormat = "mm/dd/yyyy HH:MM:ss";
     }
     else if(timeFormatConfig === "FI"){
         timeFormat = "dd-mm-yyyy HH:MM:ss";
