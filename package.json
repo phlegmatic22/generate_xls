@@ -1,0 +1,17 @@
+{
+  "name": "data_generation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate_data.js",
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "exceljs": "^1.15.0",
+    "optimist": "^0.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
