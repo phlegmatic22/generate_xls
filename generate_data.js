@@ -35,7 +35,8 @@ configWorkbook.xlsx.readFile("config.xlsx")
             analogOrDiscrete : configBook.worksheets[0].getColumn(4).values.slice(2),
             decimalSeparator : configBook.worksheets[0].getColumn(5).values.slice(2),
             timeSpan : configBook.worksheets[0].getColumn(6).values.slice(2),
-            period : configBook.worksheets[0].getColumn(7).values.slice(2)
+            period : configBook.worksheets[0].getColumn(7).values.slice(2),
+            timeFormat: configBook.worksheets[0].getColumn(8).values.slice(2)[0]
 
         };
 
@@ -79,7 +80,7 @@ function createOutputWorkbook(configs) {
 function getData(workbook, configs) {
     var worksheet = workbook.worksheets[0];
     var tagNames = [];
-    var timeStamps = getTimeStamps(configs.timeSpan, configs.period); //TÄSTÄ JATKUU KEHITYS
+    var timeStamps = getTimeStamps(configs.timeSpan, configs.period, configs.timeFormat); //TÄSTÄ JATKUU KEHITYS
     var values = getValues(configs, timeStamps.length);
     var status = [];
 
@@ -119,9 +120,16 @@ function getData(workbook, configs) {
 
 
 
-function getTimeStamps(timeSpan, period) {
+function getTimeStamps(timeSpan, period, timeFormatConfig) {
 
     var totalTimeStamps = [];
+    var timeFormat;
+    if(timeFormatConfig === "US"){
+        timeFormat = "dd/mm/yyyy HH:MM:ss";
+    }
+    else if(timeFormatConfig === "FI"){
+        timeFormat = "dd-mm-yyyy HH:MM:ss";
+    }
 
     for(var i = 0; i < timeSpan.length; i++){
         var currentPeriod = period[i];
@@ -131,10 +139,11 @@ function getTimeStamps(timeSpan, period) {
         var dateNow = new Date();
         var dateNow2 = new Date();
 
+
         if (currentTimeSpan == "Month") {
 
             var timeMonthAgo = new Date(dateNow2.setMonth(dateNow2.getMonth() - 1));
-            while (dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss") !== dateFormat(timeMonthAgo, "dd-mm-yyyy HH:MM:ss")) {
+            while (dateFormat(dateNow, timeFormat) !== dateFormat(timeMonthAgo, timeFormat)) {
     
                 if (currentPeriod == "Hour") {
                     dateNow.addHours(-1);
@@ -143,47 +152,47 @@ function getTimeStamps(timeSpan, period) {
                 } else if (currentPeriod == "Minute") {
                     dateNow.addMinutes(-1);
                 }
-                var stamp = dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss");
+                var stamp = dateFormat(dateNow, timeFormat);
                 timeStamps.push(stamp);
             }
     
         } else if (currentTimeSpan == "Day") {
     
             var timeDayAgo = dateNow2.addDays(-1);
-            while (dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss") !== dateFormat(timeDayAgo, "dd-mm-yyyy HH:MM:ss")) {
+            while (dateFormat(dateNow, timeFormat) !== dateFormat(timeDayAgo, timeFormat)) {
     
                 if (currentPeriod == "Hour") {
                     dateNow.addHours(-1);
                 } else if (currentPeriod == "Minute") {
                     dateNow.addMinutes(-1);
                 }
-                var stamp = dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss");
+                var stamp = dateFormat(dateNow, timeFormat);
                 timeStamps.push(stamp);
             }
     
         } else if (currentTimeSpan == "Hour") {
             var timeHourAgo = dateNow2.addHours(-1);
-            while (dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss") !== dateFormat(timeHourAgo, "dd-mm-yyyy HH:MM:ss")) {
+            while (dateFormat(dateNow, timeFormat) !== dateFormat(timeHourAgo, timeFormat)) {
     
                 if (currentPeriod == "Hour") {
                     dateNow.addHours(-1);
                 } else if (currentPeriod == "Minute") {
                     dateNow.addMinutes(-1);
                 }
-                var stamp = dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss");
+                var stamp = dateFormat(dateNow, timeFormat);
                 timeStamps.push(stamp);
             }
     
         } else if (currentTimeSpan == "Week") {
             var timeWeekAgo = dateNow2.addDays(-7);
-            while (dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss") !== dateFormat(timeWeekAgo, "dd-mm-yyyy HH:MM:ss")) {
+            while (dateFormat(dateNow, timeFormat) !== dateFormat(timeWeekAgo, timeFormat)) {
     
                 if (currentPeriod == "Minute") {
                     dateNow.addMinutes(-1);
                 } else if (currentPeriod == "Hour") {
                     dateNow.addHours(-1);
                 }
-                var stamp = dateFormat(dateNow, "dd-mm-yyyy HH:MM:ss");
+                var stamp = dateFormat(dateNow, timeFormat);
                 timeStamps.push(stamp);
             }
     
